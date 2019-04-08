@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ESRI.Configuration xmlns="http://schemas.esri.com/DADF/Registry" 
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
+  <Name>TreasureHuntingProPlugin</Name>
+  <AddInID>{9ab5cde5-af6e-451d-9903-48e7498a6449}</AddInID>
+  <Description>TreasureHuntingProPlugin description</Description>
+  <Version>1.0</Version>
+  <Author>bultje</Author>
+  <Company>Acme</Company>
+  <Date>>29-Mar-2019 09:25:38, 2019</Date>
+  <Targets>
+    <Target name="ArcGISPro" version="2.3" />
+  </Targets>
+  <!-- CLR should be set to the 4.6.1 set in the .csproj -->
+  <AddIn language="CLR4.6.1" library="TreasureHuntingProPlugin.dll" namespace="TreasureHuntingProPlugin">
+    <ArcGISPro>
+      <PluginDatasources>
+        <PluginDatasource id="TreasureHuntingProPlugin_Datasource" class="ProPluginTreasuremapDatasource"/>
+      </PluginDatasources>
+    </ArcGISPro>
+  </AddIn>
+</ESRI.Configuration>

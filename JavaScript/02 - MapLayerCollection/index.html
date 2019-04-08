@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Collection</title>
+  <style>
+    html {
+      padding: 40px;
+      overflow-x: hidden;
+    }
+
+    #code {
+      position: absolute;
+      right: 10px;
+      bottom: 20px;
+      padding: 5px;
+      background-color: rgba(255, 255, 255, 0.9);
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 24px;
+      width: 750px;
+      border: 1px solid black;
+    }
+
+    #webmapItems {
+      display: flex;
+      justify-content: center;
+      width: 100vw;
+
+    }
+
+    #webmap {
+      width: 400px;
+    }
+
+    #viewDiv {
+      font-size: 24px;
+    }
+  </style>
+  
+  <!-- Calcite Maps Bootstrap -->
+  <!-- <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-bootstrap.min-v0.7.css"> -->
+
+  <!-- Calcite Maps -->
+  <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-arcgis-4.x.min-v0.7.css">
+  <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/css/main.css">
+  <script src="https://js.arcgis.com/4.11/"></script>
+
+  <script>
+    require([
+      "esri/WebMap",
+      "esri/core/Collection"
+    ], function (WebMap, Collection) {
+
+      const items = [
+        //"f2fe121a049440c1a109d09f890095c0",
+        "cabbcb82c36b4bb8abe8b20998c5621d",
+        "f446c474f99d473b998e0aa5e9d9bab2"
+      ];
+
+      const elem = document.getElementById("webmapItems");
+
+      // Method to visualize the item in the div
+      const show = (portalItem) => {
+        elem.innerHTML = `${elem.innerHTML}<div id="webmap">
+          <h1>${portalItem.title}</h1>
+          <img src="${portalItem.thumbnailUrl}" />
+          <br />${portalItem.owner}</div>`;
+      };
+
+      // Create a portalItem object in the webmap
+      const asItem = (id) => ({
+        portalItem: {
+          id
+        }
+      });
+
+      // Create a collection of WebMaps
+      const WebMapCollection = Collection.ofType(WebMap);
+      const webmaps = new WebMapCollection(items.map(asItem));
+
+      // load the webmaps, from an array
+      Promise.all(webmaps.map(a => a.load()).toArray())
+        .then((result) => result.map((webmap) => show(webmap.portalItem)) )
+        .catch(show)
+
+
+
+    });
+  </script>
+</head>
+
+<body>
+  <div id="viewDiv">
+    <div id="webmapItems">
+    </div>
+  </div>
+  <div id="code">
+  <pre>const WebMapCollection = Collection.ofType(WebMap);
+const webmaps = new WebMapCollection(items.map(asItem));
+    
+const asItem = (id) => ({
+  portalItem: {
+    id
+  }
+});
+
+Promise.all(webmaps.map(a => a.load()).toArray())
+  .then(handleResults)</pre>
+          </div>
+</body>
+
+</html>

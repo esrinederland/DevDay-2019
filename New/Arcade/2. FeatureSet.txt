@@ -1,0 +1,12 @@
+var provincieFS = FeatureSetByName($map, 'Provincies', ['OMSCHRIJVI'], false)
+
+var provincies = Within(Centroid($feature), provincieFS)
+
+var message = "De gemeente " +  $feature["gemeentena"] +
+              
+	      TextFormatting.NewLine +
+              
+              " ligt in de provincie: " + First(provincies)['OMSCHRIJVI']
+
+
+return message

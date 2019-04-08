@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Editor Widget</title>
+
+  <style>
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    #code {
+      position: absolute;
+      right: 10px;
+      bottom: 20px;
+      padding: 5px;
+      background-color: rgba(255, 255, 255, 0.9);
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 24px;
+      width: 600px;
+    }
+  </style>
+  <!-- Calcite Maps Bootstrap -->
+  <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-bootstrap.min-v0.7.css">
+
+  <!-- Calcite Maps -->
+  <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-arcgis-4.x.min-v0.7.css">
+  <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/css/main.css">
+
+  <script src="https://js.arcgis.com/4.11/"></script>
+
+  <script>
+    require([
+      "esri/views/MapView",
+      "esri/WebMap",
+      "esri/widgets/Editor"
+    ], function(
+      MapView, WebMap, Editor
+    ) {
+
+      /************************************************************
+       * Creates a new WebMap instance. A WebMap must reference
+       * a PortalItem ID that represents a WebMap saved to
+       * arcgis.com or an on-premise portal.
+       *
+       * To load a WebMap from an on-premise portal, set the portal
+       * url with esriConfig.portalUrl.
+       ************************************************************/
+      var webmap = new WebMap({
+        portalItem: { // autocasts as new PortalItem()
+          id: "56cda3aeb42f49309103742877f203cc"
+        }
+      });
+
+      var featureLayer = {};
+
+      /************************************************************
+       * Set the WebMap instance to the map property in a MapView.
+       ************************************************************/
+      var view = new MapView({
+        map: webmap,
+        container: "viewDiv"
+      });
+
+      view.when(() => {
+        featureLayer = view.map.allLayers.filter((layer) => {
+          return layer.title === 'Punten EGT2019';
+        }).items[0];  
+
+        const editor = new Editor({ 
+        label: 'Label',
+        view: view ,
+        layerInfos: [{
+        layer: featureLayer, // pass in the feature layer
+        fieldConfig: [ // Specify which fields to configure
+          {
+            name: "title",
+            label: "Titel"
+          },
+          {
+            name: "TypePoint",
+            label: "Status"
+          },
+          {
+            name: "Description",
+            label: "Beschrijving"
+          }
+          ]
+          // enabled: true, // default is true, set to false to disable editing functionality
+          // addEnabled: true, // default is true, set to false to disable the ability to add a new feature
+          // updateEnabled: false // default is true, set to false to disable the ability to edit an existing feature
+          //deleteEnabled: false // default is true, set to false to disable the ability to delete features
+          }]
+        });
+
+      view.ui.add(editor, "top-right");
+      })
+      
+      
+    });
+  </script>
+</head>
+
+<body>
+  <div id="viewDiv"></div>
+</body>
+
+</html>

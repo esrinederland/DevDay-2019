@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>FeatureForm Widget</title>
+
+  <style>
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+<link
+rel="stylesheet"
+href="https://s3-us-west-1.amazonaws.com/patterns.esri.com/files/calcite-web/1.2.0/css/calcite-web.min.css"
+/>
+<link rel="stylesheet" href="https://jsdev.arcgis.com/4.11/esri/css/main.css" />
+<link rel="stylesheet" href="style.css" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+
+  <script src="https://js.arcgis.com/4.11/"></script>
+
+  <script>
+    require([
+      "esri/views/MapView",
+      "esri/WebMap",
+      "esri/layers/FeatureLayer",
+      "esri/widgets/FeatureForm",
+      "esri/widgets/FeatureForm/FieldConfig",
+      "esri/widgets/FeatureForm/FieldGroupConfig",
+
+    ], function (
+      MapView, WebMap, FeatureLayer, FeatureForm, FieldConfig, FieldGroupConfig
+    ) {
+
+      /************************************************************
+       * Creates a new WebMap instance. A WebMap must reference
+       * a PortalItem ID that represents a WebMap saved to
+       * arcgis.com or an on-premise portal.
+       *
+       * To load a WebMap from an on-premise portal, set the portal
+       * url with esriConfig.portalUrl.
+       ************************************************************/
+      var webmap = new WebMap({
+        portalItem: { // autocasts as new PortalItem()
+          id: "56cda3aeb42f49309103742877f203cc"
+        }
+      });
+
+      const featureLayer = new FeatureLayer({
+        portalItem: {
+          id: "56ee7f16a4804b67942015a39e57302f"
+        }
+      });
+
+      /************************************************************
+       * Set the WebMap instance to the map property in a MapView.
+       ************************************************************/
+      var view = new MapView({
+        map: webmap,
+        container: "viewDiv",
+        layers: [featureLayer]
+      });
+
+      // Disable popup
+      view.popup.autoOpenEnabled = false;
+
+
+
+
+        
+
+      const featureForm = new FeatureForm({
+        container: "featureFormDiv",
+        groupDisplay: "sequential", // only display one group at a time
+        layer: featureLayer,
+        fieldConfig: createFieldConfig()
+      });
+
+      function createFieldConfig() {
+        return [createDamageInfoGroup()];
+      }
+
+      function createDamageInfoGroup() {
+        return new FieldGroupConfig({
+          label: "Status",
+          description: "Beschrijf status en schade", // 🕵
+
+          fieldConfig: [
+            new FieldConfig({
+              name: "isDamaged",
+              label: "Is het voorwerp beschadigd?" // 🔒
+            }),
+
+            new FieldConfig({
+              name: "damage",
+              label: "Wat is de schade?"//, // 🚩
+              //visibilityExpression: "$feature.isDamaged == 1"
+            }),
+
+          ],
+        });
+      }
+
+      view.on("click", function(event) {
+      // Unselect any currently selected features
+      unselectFeature();
+      // Listen for when the user clicks on the view
+      view.hitTest(event).then(function(response) {
+        // If user selects a feature, select it
+        const results = response.results;
+        if (results.length > 0 && results[0].graphic && results[0].graphic.layer === featureLayer) {
+          selectFeature(results[0].graphic.attributes[featureLayer.objectIdField]);
+        }
+        else {
+          // Hide the form and show the info div
+          document.getElementById("update").classList.add("esri-hidden");
+        }
+      });
+    });
+
+      view.ui.add(featureForm, "top-right");
+      view.ui.add("update", "top-right");
+
+    });
+  </script>
+</head>
+
+<body>
+  <div id="viewDiv"></div>
+  <div id="update" class="esri-widget esri-hidden">
+    <div id="form" class="scroller esri-component"></div>
+    <input type="button" class="esri-button" value="Update assessment" id="btnUpdate">
+  </div>
+</body>
+
+</html>

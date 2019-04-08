@@ -1,0 +1,29 @@
+.jimu-widget-DevDay2019 .flex-container {
+  display: flex;
+}
+
+.jimu-widget-DevDay2019 .action-button {
+  font-size: 16px;
+  background-color: transparent;
+  border: 1px solid #D3D3D3; 
+  color: #6e6e6e;
+  height: 80px;
+  width: 80px;
+  text-align: center;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+}
+
+.jimu-widget-DevDay2019 .action-button:hover,
+.jimu-widget-DevDay2019 .action-button:focus {
+  background: #0079c1;
+  color: #e4e4e4;
+}
+
+.jimu-widget-DevDay2019 .active {
+  background: #0079c1;
+  color: #e4e4e4;
+}
+
+.jimu-widget-DevDay2019 .esri-icon-edit:before {
+  font-size: 40px;
+}

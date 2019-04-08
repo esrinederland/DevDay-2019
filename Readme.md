@@ -1,3 +1,4 @@
+![Banner](https://raw.githubusercontent.com/esrinederland/esrinederland.github.io/master/images/DD19_banner.png)
 # DevDay2019
 Link to the session specific folders:
 

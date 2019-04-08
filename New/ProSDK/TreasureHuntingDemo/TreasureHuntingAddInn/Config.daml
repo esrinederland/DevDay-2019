@@ -1,0 +1,27 @@
+﻿<ArcGIS defaultAssembly="TreasureHuntingAddInn.dll" defaultNamespace="TreasureHuntingAddInn" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
+  <AddInInfo id="{ce7b1fd1-2106-4588-ba7a-c25d764d6eda}" version="1.0" desktopVersion="2.3.15769">
+    <Name>TreasureHuntingAddInn</Name>
+    <Description>TreasureHuntingAddInn</Description>
+    <Image>Images\AddinDesktop32.png</Image>
+    <Author>G. Bultje</Author>
+    <Company>Esri Nederland</Company>
+    <Date>29-Mar-2019 09:26:28, 2019</Date>
+    <Subject>Framework</Subject>
+  </AddInInfo>
+  <modules>
+    <insertModule id="TreasureHuntingAddInn_Module" className="TreasureHuntingModule" autoLoad="false" caption="Treasures">
+      <tabs>
+      </tabs>
+      <groups>
+        <group id="TreasureHuntingAddInn_Group1" keytip="treasure" caption="Treasures" appearsOnAddInTab="true">
+          <button refID="TreasureHuntingAddInn_TreasureHuntingButton" size="large" />
+        </group>
+      </groups>
+      <controls>
+        <button id="TreasureHuntingAddInn_TreasureHuntingButton" keytip="treasure" caption="Finding treasures" className="TreasureHuntingButton" loadOnClick="true" smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericButtonBlue16.png" largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericButtonBlue32.png">
+          <tooltip heading="treasure">Do some treasure hunting<disabledText /></tooltip>
+        </button>
+      </controls>
+    </insertModule>
+  </modules>
+</ArcGIS>

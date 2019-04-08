@@ -1,0 +1,71 @@
+{
+	"X": 202840.403988,
+	"Y": 501903.228419,
+	"Route" : 
+	[{
+		"OId" : 100,
+		"Steps": 236,
+		"Course": 274.6,
+		"Name": "Stap 1"
+	},
+	{
+		"OId" : 101,
+		"Steps": 234,
+		"Course": 184.7,
+		"Name": "Stap 2"
+	},
+	{
+		"OId" : 102,
+		"Steps": 164,
+		"Course": 93.0,
+		"Name": "Stap 3"
+	},
+	{
+		"OId" : 103,
+		"Steps": 122,
+		"Course": 4.0,
+		"Name": "Stap 4"
+	},
+	{
+		"OId" : 104,
+		"Steps": 84,
+		"Course": 94.0,
+		"Name": "Stap 5"
+	},
+	{
+		"OId" : 105,
+		"Steps": 75,
+		"Course": 184.7,
+		"Name": "Stap 6"
+	},
+	{
+		"OId" : 106,
+		"Steps": 73,
+		"Course": 94,
+		"Name": "Stap 7"
+	},
+	{
+		"OId" : 107,
+		"Steps": 34,
+		"Course": 60,
+		"Name": "Stap 8"
+	},
+	{
+		"OId" : 108,
+		"Steps": 44,
+		"Course": 25,
+		"Name": "Stap 9"
+	},
+	{
+		"OId" : 109,
+		"Steps": 58,
+		"Course": 81,
+		"Name": "Stap 10"
+	},
+	{
+		"OId" : 110,
+		"Steps": 125,
+		"Course": 173,
+		"Name": "Stap 11"
+	}]
+}

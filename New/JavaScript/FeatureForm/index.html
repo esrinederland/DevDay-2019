@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>FeatureForm</title>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/css/main.css">
+  <script src="https://js.arcgis.com/4.11/"></script>
+
+  <style>
+    html,
+    body,
+    #viewDiv {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    #info {
+      padding: 14px;
+      border-radius: 5px;
+    }
+
+    #update {
+      padding: 6px;
+    }
+
+    #form{
+      background: #fff;
+    }
+
+    /* replaces esri-widget--panel */  
+    .scroller {
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+  </style>
+
+  <script>
+    require([
+    "esri/WebMap",
+    "esri/views/MapView",
+    "esri/widgets/FeatureForm",
+    "esri/layers/FeatureLayer"
+  ], function(
+    WebMap,
+    MapView,
+    FeatureForm,
+    FeatureLayer) {
+
+    let highlight, editFeature;
+
+
+    const featureLayer = new FeatureLayer({
+        portalItem: {
+          id: "56ee7f16a4804b67942015a39e57302f"
+        }
+      });
+
+    var webmap = new WebMap({
+        portalItem: { // autocasts as new PortalItem()
+          id: "56cda3aeb42f49309103742877f203cc"
+        }
+      });
+
+      webmap.add(featureLayer);
+
+    let view = new MapView({
+      map: webmap,
+      container: "viewDiv"
+    });
+
+    // Add a new feature form with grouped fields
+    const form = new FeatureForm({
+      container: "form",
+      groupDisplay: "sequential", // only display one group at a time
+      layer: featureLayer,
+      fieldConfig: [{  // autocastable to FieldGroupConfig
+        label: "Formulier", // Inspector group
+        description: "Beschadiging lamp",
+        // individual field configurations within the group
+        fieldConfig: [{ // autocastable as FieldConfig
+          name: "Description",
+          label: "Beschrijving"
+        },{
+          name: "isDamaged",
+          label: "Beschadigd?"
+        },{
+          name: "damage",
+          label: "Schade",
+          visibilityExpression: "$feature.isDamaged == '1'" // conditional field
+        }]
+      }]
+    });
+
+    // Disable popup
+    view.popup.autoOpenEnabled = false;
+
+    view.on("click", function(event) {
+      // Unselect any currently selected features
+      unselectFeature();
+      // Listen for when the user clicks on the view
+      view.hitTest(event).then(function(response) {
+        // If user selects a feature, select it
+        const results = response.results;
+        if (results.length > 0 && results[0].graphic && results[0].graphic.layer.title === featureLayer.title) {
+          selectFeature(results[0].graphic.attributes[featureLayer.objectIdField]);
+        }
+        else {
+          // Hide the form and show the info div
+          document.getElementById("update").classList.add("esri-hidden");
+        }
+      });
+    });
+
+    // Function to unselect features
+    function unselectFeature() {
+      if (highlight) {
+        highlight.remove();
+      }
+    }
+
+    // Highlight the clicked feature and display
+    // its attributes in the featureform.
+    function selectFeature(objectId) {
+      // query feature from the server
+      featureLayer.queryFeatures({
+        objectIds: [objectId],
+        outFields: ["*"],
+        returnGeometry: true
+      }).then(function(results) {
+        if (results.features.length > 0) {
+          editFeature = results.features[0];
+
+          // display the attributes of selected feature in the form
+          form.feature = editFeature;
+
+          // highlight the feature on the view
+          view.whenLayerView(editFeature.layer).then(function(layerView) {
+            highlight = layerView.highlight(editFeature);
+          });
+
+          if (document.getElementById("update").classList.contains("esri-hidden")){
+            document.getElementById("info").classList.add("esri-hidden");
+            document.getElementById("update").classList.remove("esri-hidden");
+          }
+        }
+      });
+    }
+
+    // Listen to the feature form's submit event.
+    form.on("submit", function() {
+      if (editFeature) {
+        // Grab updated attributes from the form.
+        const updated = form.getValues();
+
+        // Loop through updated attributes and assign
+        // the updated values to feature attributes.
+        Object.keys(updated).forEach(function(name) {
+          editFeature.attributes[name] = updated[name];
+        });
+
+        // Setup the applyEdits parameter with updates.
+        const edits = {
+          updateFeatures: [editFeature]
+        };
+        applyAttributeUpdates(edits);
+      }
+    });
+
+    // Call FeatureLayer.applyEdits() with specified params.
+    function applyAttributeUpdates(params) {
+      document.getElementById("btnUpdate").style.cursor = "progress";
+      featureLayer.applyEdits(params).then(function(editsResult) {
+          // Get the objectId of the newly added feature.
+          // Call selectFeature function to highlight the new feature.
+          if (editsResult.addFeatureResults.length > 0) {
+            const objectId = editsResult.addFeatureResults[0].objectId;
+            selectFeature(objectId);
+          }
+          document.getElementById("btnUpdate").style.cursor = "pointer";
+        })
+        .catch(function(error) {
+          console.log("===============================================");
+          console.error("[ applyEdits ] FAILURE: ", error.code, error.name,
+            error.message);
+          console.log("error = ", error);
+          document.getElementById("btnUpdate").style.cursor = "pointer";
+        });
+    }
+
+    document.getElementById("btnUpdate").onclick = function() {
+      // Fires feature form's submit event.
+      form.submit();
+    }
+
+    view.ui.add("update", "top-right");
+    view.ui.add("info", {
+      position: "top-left",
+      index: 1
+    });
+  });
+
+</script>
+</head>
+
+<body>
+  <div id="viewDiv"></div>
+  <div id="info" class="esri-widget">
+    <h3>Select a feature to begin editing</h3>
+  </div>
+
+  <div id="update" class="esri-widget esri-hidden">
+    <div id="form" class="scroller esri-component"></div>
+    <input type="button" class="esri-button" value="Update formulier" id="btnUpdate">
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>Sketch in 3D - 4.11</title>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.11/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.11/"></script>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+
+      #sketchPanel {
+        padding: 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+      }
+
+      .esri-button {
+        margin: 2px;
+      }
+    </style>
+    <script>
+      require([
+        "esri/Map",
+        "esri/views/SceneView",
+        "esri/layers/GraphicsLayer",
+        "esri/widgets/Sketch/SketchViewModel",
+        "esri/symbols/WebStyleSymbol"
+      ], function(
+        Map,
+        SceneView,
+        GraphicsLayer,
+        SketchViewModel,
+        WebStyleSymbol
+      ) {
+        // the layer where the graphics are sketched
+        const gLayer = new GraphicsLayer();
+
+        const map = new Map({
+          basemap: "satellite",
+          layers: [gLayer],
+          ground: "world-elevation"
+        });
+
+        const view = new SceneView({
+          container: "viewDiv",
+          map: map,
+          camera: {
+            position: [4.314688417481017, 52.139601420947116, 73.31548],
+            heading: 70.79,
+            tilt: 85.35
+          }
+        });
+
+        const blue = [82, 82, 122, 0.9];
+        const white = [255, 255, 255, 0.8];
+
+        // polygon symbol used for sketching the extruded building footprints
+        const extrudedPolygon = {
+          type: "polygon-3d",
+          symbolLayers: [
+            {
+              type: "extrude",
+              size: 20, // extrude by 20 meters
+              material: {
+                color: white
+              },
+              edges: {
+                type: "solid",
+                size: "3px",
+                color: blue
+              }
+            }
+          ]
+        };
+
+        // polyline symbol used for sketching routes
+        const route = {
+          type: "line-3d",
+          symbolLayers: [
+            {
+              type: "line",
+              size: "3px",
+              material: {
+                color: blue
+              }
+            },
+            {
+              type: "line",
+              size: "10px",
+              material: {
+                color: white
+              }
+            }
+          ]
+        };
+
+        // point symbol used for sketching points of interest
+        const point = {
+          type: "point-3d",
+          symbolLayers: [
+            {
+              type: "icon",
+              size: "20px",
+              resource: { primitive: "kite" },
+              outline: {
+                color: blue,
+                size: "3px"
+              },
+              material: {
+                color: white
+              }
+            }
+          ]
+        };
+
+        // define the SketchViewModel and pass in the symbols for each geometry type
+        const sketchVM = new SketchViewModel({
+          layer: gLayer,
+          view: view,
+          pointSymbol: point,
+          polygonSymbol: extrudedPolygon,
+          polylineSymbol: route
+        });
+
+        // add an event listener for the Delete key to delete
+        // the graphics that are currently being updated
+        view.on("key-up", function(evt) {
+          if (evt.key === "Delete") {
+            gLayer.removeMany(sketchVM.updateGraphics);
+            sketchVM.reset();
+          }
+        });
+        
+        view.on("hold", function(evt) {
+          console.log(evt);
+        })
+
+        // after drawing the geometry, enter the update mode to update the geometry
+        // and the deactivate the buttons
+        sketchVM.on("create", function(event) {
+          if (event.state === "complete") {
+            sketchVM.update(event.graphic);
+            deactivateButtons();
+          }
+        });
+
+        const drawButtons = Array.prototype.slice.call(
+          document.getElementsByClassName("esri-button")
+        );
+
+        // set event listeners to activate sketching graphics
+        drawButtons.forEach(function(btn) {
+          btn.addEventListener("click", function(event) {
+            deactivateButtons();
+            event.target.classList.add("esri-button--secondary");
+            // to activate sketching the create method is called passing in the geometry type
+            // from the data-type attribute of the html element
+            sketchVM.create(event.target.getAttribute("data-type"));
+          });
+        });
+
+        function deactivateButtons() {
+          drawButtons.forEach(function(element) {
+            element.classList.remove("esri-button--secondary");
+          });
+        }
+
+        view.ui.add("sketchPanel", "top-right");
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+    <div id="sketchPanel" class="esri-widget">
+      <button id="extrudedPolygon" data-type="polygon" class="esri-button">
+        Draw a building
+      </button>
+      <button id="point" data-type="point" class="esri-button">
+        Draw a point of interest
+      </button>
+      <button id="line" data-type="polyline" class="esri-button">
+        Draw a route
+      </button>
+    </div>
+  </body>
+</html>

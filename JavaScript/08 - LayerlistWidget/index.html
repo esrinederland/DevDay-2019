@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Layerlist Widget</title>
+
+  <style>
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/themes/dark/main.css">
+
+  <script src="https://js.arcgis.com/4.11/"></script>
+
+  <script>
+    require([
+      "esri/views/MapView",
+      "esri/WebMap",
+      "esri/widgets/LayerList"
+
+    ], function(
+      MapView, WebMap, LayerList
+    ) {
+
+      /************************************************************
+       * Creates a new WebMap instance. A WebMap must reference
+       * a PortalItem ID that represents a WebMap saved to
+       * arcgis.com or an on-premise portal.
+       *
+       * To load a WebMap from an on-premise portal, set the portal
+       * url with esriConfig.portalUrl.
+       ************************************************************/
+      var webmap = new WebMap({
+        portalItem: { // autocasts as new PortalItem()
+          id: "2c170939a143475da9f3239f18d0d340"
+        }
+      });
+
+      /************************************************************
+       * Set the WebMap instance to the map property in a MapView.
+       ************************************************************/
+      var view = new MapView({
+        map: webmap,
+        container: "viewDiv"
+      });
+
+      // Add a legend instance to the panel of a
+      // ListItem in a LayerList instance
+      const layerList = new LayerList({
+        view: view,
+        listItemCreatedFunction: function(event) {
+          const item = event.item;
+            item.panel = {
+              content: "legend",
+              open: false
+            };
+          defineActions(event);
+        }
+      });
+
+      view.ui.add(layerList, "top-right");
+
+      // Creates actions in the LayerList.
+      function defineActions(event) {
+
+        var item = event.item;
+
+        if (item.title === "Lokale bekendmakingen") {
+        // An array of objects defining actions to place in the LayerList.
+        // By making this array two-dimensional, you can separate similar
+        // actions into separate groups with a breaking line.
+
+        item.actionsSections = [
+          [{
+            title: "Go to full extent",
+            className: "esri-icon-zoom-out-fixed",
+            id: "full-extent"
+          }, {
+            title: "Layer information",
+            className: "esri-icon-description",
+            id: "information"
+          }],
+          [{
+            title: "Increase opacity",
+            className: "esri-icon-up",
+            id: "increase-opacity"
+          }, {
+            title: "Decrease opacity",
+            className: "esri-icon-down",
+            id: "decrease-opacity"
+          }]
+        ];
+      }
+      }
+
+
+    });
+  </script>
+</head>
+
+<body>
+  <div id="viewDiv"></div>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+1. Legend
+        listItemCreatedFunction: function(event) {
+          const item = event.item;
+            item.panel = {
+              content: "legend",
+              open: false
+            };
+          //defineActions(event);
+        }
+
+
+2. Feature actions
+
+function defineActions(event) {
+
+        var item = event.item;
+
+        if (item.title === "Lokale bekendmakingen") {
+        // An array of objects defining actions to place in the LayerList.
+        // By making this array two-dimensional, you can separate similar
+        // actions into separate groups with a breaking line.
+
+        item.actionsSections = [
+          [{
+            title: "Go to full extent",
+            className: "esri-icon-zoom-out-fixed",
+            id: "full-extent"
+          }, {
+            title: "Layer information",
+            className: "esri-icon-description",
+            id: "information"
+          }],
+          [{
+            title: "Increase opacity",
+            className: "esri-icon-up",
+            id: "increase-opacity"
+          }, {
+            title: "Decrease opacity",
+            className: "esri-icon-down",
+            id: "decrease-opacity"
+          }]
+        ];
+      }
+      }
+
+
+3. Theme

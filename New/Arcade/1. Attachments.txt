@@ -1,0 +1,18 @@
+var bordenAttachments = Attachments($feature)
+
+
+
+// Check is attachement is present and return a human readable string
+
+if (Count(bordenAttachments) >= 1 )
+{
+     
+	return "Foto's zijn reeds aanwezig"
+
+} 
+else 
+{
+ 
+	return "Foto's moeten nog gemaakt worden"
+  
+}
