@@ -1,0 +1,16 @@
+.esri-widget--button.widgets-iconbutton {
+  width: auto;
+  padding-left: 12px;
+  padding-right: 12px;
+  min-width: 32px;
+  justify-content: center;
+}
+
+.widgets-iconbutton.esri-disabled {
+  opacity: 0.3;
+}
+
+.widgets-iconbutton > .esri-icon ~ span {
+  margin-left: 8px;
+}
+

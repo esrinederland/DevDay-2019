@@ -2,6 +2,8 @@
 # DevDay2019
 Link to the session specific folders:
 
+[Plenair](https://github.com/esrinederland/DevDay-2019/tree/master/Plenair)
+
 [What's new for developers](https://github.com/esrinederland/DevDay-2019/tree/master/New)
 
 [JavaScript 3 en 4: de verschillen / Web AppBuilder: the developer edition](https://github.com/esrinederland/DevDay-2019/tree/master/JavaScript)

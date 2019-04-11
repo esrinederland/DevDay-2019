@@ -1,0 +1,14 @@
+.esri-widget .widgets-slider {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+}
+
+.esri-widget .widgets-slider .widgets-slider--title {
+  padding-right: 12px;
+}
+
+.esri-widget .widgets-slider .widgets-slider--value {
+  flex-grow: 1;
+}

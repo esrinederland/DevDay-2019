@@ -1,0 +1,81 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.hljs {
+  font-size: 130%;
+  line-height: 120%;
+}
+
+.application {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: black;
+}
+
+.mapping {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.application-panel {
+  padding: 12px;
+  width: auto;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.esri-widget .application-panel {
+  background-color: #242424DD;
+  backdrop-filter: blur(5px) contrast(200%);
+}
+
+.application-panel fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.application-panel .js-code {
+  position: relative;
+}
+
+.application-panel .run-button {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+
+.application-panel legend {
+  font-size: 16px;
+}
+
+.esri-widget--button.esri-widget.free-width {
+  width: auto;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.esri-view-width-less-than-large .hljs {
+  font-size: 100%;
+  line-height: 100%;
+}
+
+.esri-view-width-less-than-large .application-panel .run-button {
+  position: relative;
+}
+
+.esri-view-width-less-than-small .esri-expand--auto .esri-widget.application-panel .run-button
+ {
+  width: auto;
+  position: fixed;
+  top: 1.023rem;
+  right: 1.023rem;
+}

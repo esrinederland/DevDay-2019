@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+  <title>GeoJSON</title>
+
+  <link rel="stylesheet" href="./src/2_geojson/application.css">
+  <link rel="stylesheet" href="./src/widgets/Indicator.css">
+  <link rel="stylesheet" href="./src/widgets/Banner.css">
+  <link rel="stylesheet" href="./src/widgets/IconButton.css">
+  <link rel="stylesheet" href="./src/widgets/ToggleIconButton.css">
+  <link rel="stylesheet" href="./src/widgets/Slider.css">
+  <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/themes/dark-blue/main.css">
+
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.5/build/styles/agate.min.css">
+</head>
+
+<body>
+  <div class="application">
+    <div id="viewDiv" class="mapping" style="display: flex;"></div>
+  </div>
+
+  <div id="layerPanel" class="esri-widget application-panel" style="width: auto;">
+    <fieldset>
+      <legend>Add GeoJSONLayer</legend>
+      <div class="js-code">
+        <div id="addGeoJSONLayerButton" class="run-button esri-widget esri-widget--button esri-icon-play" role="button"></div>
+        <pre><code class="javascript">const url = &quot;http://localhost/aardbevingen/Aardbevingen.geojson&quot;;
+
+const layer = new GeoJSONLayer({
+  url,
+  title: &quot;Aardbevingen Nederland&quot;,
+  copyright: &quot;KNMI&quot;,
+  popupTemplate: {
+    content: `
+      Aardbeving van magnitude {magnitude} op {date}.&lt;br /&gt;
+    `
+  }
+});</code></pre>
+      </div>
+    </fieldset>
+  </div>
+
+  <div id="elevationPanel"  class="esri-widget application-panel">
+    <fieldset>
+      <legend>Elevation</legend>
+      <div class="js-code">
+        <div id="applyElevationInfoButton" class="run-button esri-widget esri-widget--button esri-icon-play" role="button"></div>
+        <pre><code class="javascript">layer.elevationInfo = {
+  mode: "absolute-height",
+  unit: "meters",
+  featureExpressionInfo: {
+    expression: "$feature.depth * -1"
+  }
+};</code></pre>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Ground Opacity</legend>
+      <div class="js-code">
+        <pre><code id="groundOpacityCode" class="javascript">scene.ground.opacity = 1;</code></pre>
+      </div>
+      <div id="opacitySlider"></div>
+    </fieldset>
+  </div>
+
+  <div id="rendererPanel"  class="esri-widget application-panel">
+    <fieldset>
+      <legend>Renderer</legend>
+      <div class="js-code">
+        <div id="applyRendererButton" class="run-button esri-widget esri-widget--button esri-icon-play" role="button"></div>
+        <pre><code class="javascript">layer.renderer = new SimpleRenderer({
+  symbol: new PointSymbol3D({
+    symbolLayers: [
+      new ObjectSymbol3DLayer({
+        resource: { primitive: &quot;sphere&quot; }
+      })
+    ]
+  }),
+  visualVariables: [
+    new ColorVariable({
+      field: &quot;mag&quot;,
+      stops: [{ value: 0.5, color: &quot;white&quot; }, { value: 4, color: &quot;red&quot; }]
+    }),
+    new SizeVariable({
+      field: &quot;mag&quot;,
+      axis: &quot;all&quot;,
+      stops: [{ value: 0.5, size: 500 }, { value: 5, size: 5000 }]
+    })
+  ]
+});</code></pre>
+      </div>
+    </fieldset>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.5/build/highlight.min.js"></script>
+  <script src="src/config.js"></script>
+  <script src="https://js.arcgis.com/4.11/dojo/dojo.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</body>
+
+</html>
