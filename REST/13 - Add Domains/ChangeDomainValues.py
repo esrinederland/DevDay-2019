@@ -3,7 +3,6 @@ import requests
 import datetime
 import json
 import os
-import Security
 
 _featureLayerUrl = "https://services.arcgis.com/emS4w7iyWEQiulAb/arcgis/rest/services/EGT19_REST_MarkantObject/FeatureServer/0"
 _fieldName = "PROVINCIE"
